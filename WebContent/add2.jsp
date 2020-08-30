@@ -10,40 +10,28 @@
 			<h2>
 				<span>Thêm tin tức</span>
 			</h2>
-
-			<div>
-					<h4 style="color:red"><span class="notification n-success">${msg}</span></h4>
-			</div>
 			<div class="module-body">
-			
-					
-			
-				<form action="<%=request.getContextPath()%>/AddProduct2"
-					method="post" enctype="multipart/form-data">
 			<%
 				String tenHoa = "";
 				String moTa = "";
 				String hinhAnh="";
 				String giaBanString="";
-				/* Part hinhAnh1= request.getPart("filePart"); */
-				int giaBan=0;
 				String err = "";
 				if(request.getParameter("tenHoa")!=null) tenHoa = (String) request.getParameter("tenHoa");
 				if(request.getParameter("moTa")!=null) moTa = (String) request.getParameter("moTa");
-				/* if(!request.getParameter("hinhAnh")!=null) hinhAnh =  (String)request.getParameter("hinhAnh");
-				if(!request.getParameter("filePart").startsWith("image")) hinhAnh1 =  request.getParameter("filePart"); */
+				if(request.getParameter("hinhAnh")!=null) hinhAnh =  (String)request.getParameter("hinhAnh");
 				if(request.getParameter("giaBan")!=null) giaBanString = (String) request.getParameter("giaBan");
-				if(request.getParameter("giaBan")!=null) giaBan =  Integer.parseInt(request.getParameter("giaBan")); 
-				
-				
 				if(request.getParameter("err")!=null) err = (String) request.getParameter("err");
 				
+				if("0".equals(err)) out.print("<p style='color: red; font-weight: bold'>Thêm không thành công!</p>");
 				if("1".equals(err)) out.print("<p style='color: red; font-weight: bold'>Vui lòng nhập tên hoa</p>");
 				if("2".equals(err)) out.print("<p style='color: red; font-weight: bold'>Vui lòng nhập mô tả</p>");
-				if("3".equals(err)) out.print("<p style='color: red; font-weight: bold'>Vui lòng nhập hình ảnh</p>");
-				if("4".equals(err)) out.print("<p style='color: red; font-weight: bold'>Vui lòng nhập giá bán</p>");
-				if("5".equals(err)) out.print("<p style='color: red; font-weight: bold'>Vui lòng nhập giá bán là số</p>");
+				if("4".equals(err)) out.print("<p style='color: red; font-weight: bold'>Vui lòng chọn file hình ảnh</p>");
+				if("5".equals(err)) out.print("<p style='color: red; font-weight: bold'>Vui lòng nhập giá bán</p>");
+				if("6".equals(err)) out.print("<p style='color: red; font-weight: bold'>Vui lòng nhập giá bán là số</p>");
 			%>
+				<form action="<%=request.getContextPath()%>/AddProduct2"
+					method="post" enctype="multipart/form-data">
 
 
 					
@@ -60,13 +48,13 @@
 					</p>
 						
 					<p>
-						<img alt="" src="<%=request.getContextPath()%>/images/tmp/">
+						<img alt="" src="<%=request.getContextPath()%>/images/tmp/${hinhAnh}">
 						<label>Hình ảnh</label> <input type="file" value="" name="hinhAnh" />
 					</p>
 
 					<p>
 						<label>Giá bán</label>
-						<textarea rows="7" cols="30" class="input-medium" name="giaBan"><%out.print(giaBan); %></textarea>
+						<textarea rows="7" cols="30" class="input-medium" name="giaBan"><%if(!"0".equals(giaBanString))out.print(giaBanString); %></textarea>
 					</p>
 
 					<fieldset>

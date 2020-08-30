@@ -31,7 +31,7 @@ public class DeleteProductController extends HttpServlet {
 			 id = Integer.parseInt(request.getParameter("id"));
 			
 		} catch (Exception e) {
-			request.getRequestDispatcher("/IndexProduct").forward(request, response);
+			request.getRequestDispatcher("/PageNotFound.jsp").forward(request, response);
 			return;
 		}
 		if (ProductDAO.delitems(id) > 0) {

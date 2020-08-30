@@ -6,7 +6,7 @@
             
             <!-- Dashboard icons -->
             <div class="grid_main_l">
-            	<a href="<%= request.getContextPath() %>/add.jsp" class="dashboard-module">
+            	<a href="<%= request.getContextPath() %>/AddProduct2" class="dashboard-module">
                 	<img src="images/Crystal_Clear_write.gif" width="64" height="64" alt="edit" />
                 	<span>Thêm tin sản phẩm</span>
                 </a>

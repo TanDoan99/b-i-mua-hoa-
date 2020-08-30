@@ -50,16 +50,12 @@ public class AddProductController2 extends HttpServlet {
 			return;
 		}
 		String fileName = "";
-
+		
 		Part filePart = request.getPart("hinhAnh");
 		fileName = filePart.getSubmittedFileName();// lấy tên thư mục gốc
 		String fileType = filePart.getContentType();
-
+		
 		try {
-//			if (!fileName.endsWith(".jpg") && !fileName.endsWith(".png") && !fileName.endsWith(".jpeg")
-//					&& !fileName.endsWith(".gif")) {
-//				throw new Exception();
-//			}
 			if(!fileType.startsWith("image")) {
 				throw new Exception();
 			}
@@ -69,7 +65,7 @@ public class AddProductController2 extends HttpServlet {
 			if (!saveDir.exists()) {
 				saveDir.mkdir();
 			}
-
+			
 			Date date = new Date();
 			SimpleDateFormat sdf = new SimpleDateFormat("ddMMyyyyhhmmss");
 			String fname = sdf.format(date);
@@ -79,30 +75,29 @@ public class AddProductController2 extends HttpServlet {
 			String filePath = dirUpload + File.separator + fileName;
 			filePart.write(filePath);
 		} catch (Exception e) {
-			request.getRequestDispatcher("/add2.jsp?err=3").forward(request, response);
+			request.getRequestDispatcher("/add2.jsp?err=4").forward(request, response);
 			return;
 		}
+		request.setAttribute("hinhAnh", fileName);
 		if (giaBanString.equals("")) {
-			request.getRequestDispatcher("/add2.jsp?err=4").forward(request, response);
+			request.getRequestDispatcher("/add2.jsp?err=5").forward(request, response);
 			return;
 		}
 		int giaBan = 0;
 		try {
 			giaBan = Integer.parseInt(giaBanString);
-
+			
 		} catch (NumberFormatException e) {
-			request.getRequestDispatcher("/add2.jsp?err=5").forward(request, response);
+			request.getRequestDispatcher("/add2.jsp?err=6&giaBan=0").forward(request, response);
 			return;
 		}
-		request.setAttribute("giaBan", giaBan);
 		Product objAdd = new Product(0, tenHoa, moTa, fileName, giaBan);
 
 		if (ProductDAO.additems(objAdd) > 0) {
 			response.sendRedirect(request.getContextPath()+"/IndexProduct?msg=1");
 			return;
 		} else {
-			request.setAttribute("msg", "Thêm sản phẩm thất bại!");
-			request.getRequestDispatcher("/add.jsp").forward(request, response);
+			request.getRequestDispatcher("/add2.jsp?err=0").forward(request, response);
 			return;
 		}
 

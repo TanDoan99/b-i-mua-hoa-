@@ -92,10 +92,6 @@ public class EditProductController extends HttpServlet {
 		String fileType = filePart.getContentType();//kiểm tra file hình ảnh
 		fileName = filePart.getSubmittedFileName();// lấy tên thư mục gốc
 		try {
-//			if (!fileName.endsWith(".jpg") && !fileName.endsWith(".png") && !fileName.endsWith(".jpeg")
-//					&& !fileName.endsWith(".gif")&&!fileName.endsWith(".ico")) {
-//				throw new Exception();
-//			}
 			if(!fileType.startsWith("image")) {
 				throw new Exception();
 			}
@@ -111,9 +107,7 @@ public class EditProductController extends HttpServlet {
 			SimpleDateFormat sdf = new SimpleDateFormat("ddMMyyyyhhmmss");
 			String fname = sdf.format(date);
 			fileName = firstName + "_" + fname + "." + lastName;
-//			System.out.println(fileName);
 			String filePath = dirUpload + File.separator + fileName;
-//			System.out.println(filePath);
 			filePart.write(filePath);
 		} catch (Exception e) {
 			request.setAttribute("err", "Vui lòng chọn file hình ảnh!!!");

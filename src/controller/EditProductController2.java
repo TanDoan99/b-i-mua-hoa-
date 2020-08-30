@@ -16,20 +16,34 @@ import javax.servlet.http.Part;
 import model.bean.Product;
 import model.dao.ProductDAO;
 
-@WebServlet("/AddProduct2")
+@WebServlet("/EditProduct2")
 @MultipartConfig
-public class AddProductController2 extends HttpServlet {
+public class EditProductController2 extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private static final String DIR_UPLOAD = "images" + File.separator + "tmp";
 
-	public AddProductController2() {
+	public EditProductController2() {
 		super();
 	}
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		request.getRequestDispatcher("/add2.jsp").forward(request, response);
-		
+		// Lấy thông tin hoa muốn sửa
+		int id = 0;
+		try {
+			id = Integer.parseInt(request.getParameter("id"));
+
+		} catch (NumberFormatException e) {
+			request.getRequestDispatcher("/PageNotFound.jsp").forward(request, response);
+			return;
+		}
+		Product objPro = ProductDAO.getItem(id);
+		if (objPro == null) {
+			request.getRequestDispatcher("/PageNotFound.jsp").forward(request, response);
+			return;
+		}
+		request.setAttribute("objPro", objPro);
+		request.getRequestDispatcher("/edit2.jsp").forward(request, response);
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -37,30 +51,17 @@ public class AddProductController2 extends HttpServlet {
 		response.setContentType("text/html");
 		response.setCharacterEncoding("UTF-8");
 		request.setCharacterEncoding("UTF-8");
+		int id = Integer.parseInt(request.getParameter("id"));
 		String tenHoa = request.getParameter("tenHoa");
 		String moTa = request.getParameter("moTa");
 		String giaBanString = request.getParameter("giaBan");
 
-		if (tenHoa.equals("")) {
-			request.getRequestDispatcher("/add2.jsp?err=1").forward(request, response);
-			return;
-		}
-		if (moTa.equals("")) {
-			request.getRequestDispatcher("/add2.jsp?err=2").forward(request, response);
-			return;
-		}
 		String fileName = "";
-
 		Part filePart = request.getPart("hinhAnh");
+		String fileType = filePart.getContentType();// kiểm tra file hình ảnh
 		fileName = filePart.getSubmittedFileName();// lấy tên thư mục gốc
-		String fileType = filePart.getContentType();
-
 		try {
-//			if (!fileName.endsWith(".jpg") && !fileName.endsWith(".png") && !fileName.endsWith(".jpeg")
-//					&& !fileName.endsWith(".gif")) {
-//				throw new Exception();
-//			}
-			if(!fileType.startsWith("image")) {
+			if (!fileType.startsWith("image")) {
 				throw new Exception();
 			}
 			String contextRoot = request.getServletContext().getRealPath("");
@@ -69,40 +70,46 @@ public class AddProductController2 extends HttpServlet {
 			if (!saveDir.exists()) {
 				saveDir.mkdir();
 			}
-
+			String firstName = fileName.split("\\.")[0];
+			String lastName = fileName.split("\\.")[1];
 			Date date = new Date();
 			SimpleDateFormat sdf = new SimpleDateFormat("ddMMyyyyhhmmss");
 			String fname = sdf.format(date);
-			String firstName = fileName.split("\\.")[0];
-			String lastName = fileName.split("\\.")[1];
 			fileName = firstName + "_" + fname + "." + lastName;
 			String filePath = dirUpload + File.separator + fileName;
 			filePart.write(filePath);
 		} catch (Exception e) {
-			request.getRequestDispatcher("/add2.jsp?err=3").forward(request, response);
+			request.getRequestDispatcher("/edit2.jsp?err=3").forward(request, response);
+			return;
+		}
+		request.setAttribute("hinhAnh", fileName);
+		if (tenHoa.equals("")) {
+			request.getRequestDispatcher("/edit2.jsp?err=1").forward(request, response);
+			return;
+		}
+		if (moTa.equals("")) {
+			request.getRequestDispatcher("/edit2.jsp?err=2").forward(request, response);
 			return;
 		}
 		if (giaBanString.equals("")) {
-			request.getRequestDispatcher("/add2.jsp?err=4").forward(request, response);
+			request.getRequestDispatcher("/edit2.jsp?err=4").forward(request, response);
 			return;
 		}
 		int giaBan = 0;
 		try {
+
 			giaBan = Integer.parseInt(giaBanString);
 
 		} catch (NumberFormatException e) {
-			request.getRequestDispatcher("/add2.jsp?err=5").forward(request, response);
+			request.getRequestDispatcher("/edit2.jsp?err=5&giaBan=0").forward(request, response);
 			return;
 		}
-		request.setAttribute("giaBan", giaBan);
-		Product objAdd = new Product(0, tenHoa, moTa, fileName, giaBan);
-
-		if (ProductDAO.additems(objAdd) > 0) {
-			response.sendRedirect(request.getContextPath()+"/IndexProduct?msg=1");
+		Product objPro = new Product(id, tenHoa, moTa, fileName, giaBan);
+		if (ProductDAO.Edititems(objPro) > 0) {
+			response.sendRedirect(request.getContextPath() + "/IndexProduct?msg=2");
 			return;
 		} else {
-			request.setAttribute("msg", "Thêm sản phẩm thất bại!");
-			request.getRequestDispatcher("/add.jsp").forward(request, response);
+			request.getRequestDispatcher("/edit2.jsp?err=0").forward(request, response);
 			return;
 		}
 

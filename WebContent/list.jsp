@@ -8,7 +8,7 @@
             <div class="bottom-spacing">
                   <!-- Button -->
                   <div class="float-left">
-                      <a href="<%=request.getContextPath() %>/AddProduct" class="button">
+                      <a href="<%=request.getContextPath() %>/AddProduct2" class="button">
                       	<span>Thêm sản phẩm mới <img src="images/plus-small.gif" alt="Thêm tin mới"></span>
                       </a>
                   </div>
@@ -57,7 +57,7 @@
                                     <td align="center"><img src="<%=request.getContextPath() %>/images/tmp/<%=objPro.getHinhAnh() %>" class="hoa" /></td>
                                     <td><%=objPro.getGiaBan() %></td>
                                     <td align="center">
-                                        <a href="<%=request.getContextPath()%>/EditProduct?id=<%=objPro.getId()%>">Sửa <img src="<%=request.getContextPath() %>/images/pencil.gif" alt="edit" /></a>
+                                        <a href="<%=request.getContextPath()%>/EditProduct2?id=<%=objPro.getId()%>">Sửa <img src="<%=request.getContextPath() %>/images/pencil.gif" alt="edit" /></a>
                                         <a href="<%=request.getContextPath()%>/DeleteProduct?id=<%=objPro.getId()%>" onclick="return confirm('Bạn có chắc chắn muốn xóa không?')">Xóa <img src="<%=request.getContextPath() %>/images/bin.gif" width="16" height="16" alt="delete" /></a>
                                     </td>
                                 </tr>
