@@ -19,7 +19,6 @@ public class DeleteProductController extends HttpServlet {
 	public DeleteProductController() {
 		super();
 	}
-
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
