@@ -55,34 +55,6 @@ public class EditProductController2 extends HttpServlet {
 		String tenHoa = request.getParameter("tenHoa");
 		String moTa = request.getParameter("moTa");
 		String giaBanString = request.getParameter("giaBan");
-
-		String fileName = "";
-		Part filePart = request.getPart("hinhAnh");
-		String fileType = filePart.getContentType();// kiểm tra file hình ảnh
-		fileName = filePart.getSubmittedFileName();// lấy tên thư mục gốc
-		try {
-			if (!fileType.startsWith("image")) {
-				throw new Exception();
-			}
-			String contextRoot = request.getServletContext().getRealPath("");
-			String dirUpload = contextRoot + DIR_UPLOAD;
-			File saveDir = new File(dirUpload);
-			if (!saveDir.exists()) {
-				saveDir.mkdir();
-			}
-			String firstName = fileName.split("\\.")[0];
-			String lastName = fileName.split("\\.")[1];
-			Date date = new Date();
-			SimpleDateFormat sdf = new SimpleDateFormat("ddMMyyyyhhmmss");
-			String fname = sdf.format(date);
-			fileName = firstName + "_" + fname + "." + lastName;
-			String filePath = dirUpload + File.separator + fileName;
-			filePart.write(filePath);
-		} catch (Exception e) {
-			request.getRequestDispatcher("/edit2.jsp?err=3").forward(request, response);
-			return;
-		}
-		request.setAttribute("hinhAnh", fileName);
 		if (tenHoa.equals("")) {
 			request.getRequestDispatcher("/edit2.jsp?err=1").forward(request, response);
 			return;
@@ -91,6 +63,39 @@ public class EditProductController2 extends HttpServlet {
 			request.getRequestDispatcher("/edit2.jsp?err=2").forward(request, response);
 			return;
 		}
+		String fileName = "", dirUpLoad = "", fileReName = "";
+		Product objPro = ProductDAO.getItem(id);
+		if (fileName.equals("")) {
+			fileName = objPro.getHinhAnh();
+		} else {
+			Part filePart = request.getPart("hinhAnh");
+			String fileType = filePart.getContentType();// kiểm tra file hình ảnh
+			fileName = filePart.getSubmittedFileName();// lấy tên thư mục gốc
+			try {
+				if (!fileType.startsWith("image")) {
+					throw new Exception();
+				}
+				String contextRoot = request.getServletContext().getRealPath("");
+				String dirUpload = contextRoot + DIR_UPLOAD;
+				File saveDir = new File(dirUpload);
+				if (!saveDir.exists()) {
+					saveDir.mkdir();
+				}
+				String firstName = fileName.split("\\.")[0];
+				String lastName = fileName.split("\\.")[1];
+				Date date = new Date();
+				SimpleDateFormat sdf = new SimpleDateFormat("ddMMyyyyhhmmss");
+				String fname = sdf.format(date);
+				fileName = firstName + "_" + fname + "." + lastName;
+				String filePath = dirUpload + File.separator + fileName;
+				filePart.write(filePath);
+			} catch (Exception e) {
+				request.getRequestDispatcher("/edit2.jsp?err=3").forward(request, response);
+				return;
+			}
+			
+		}
+		request.setAttribute("hinhAnh", fileName);
 		if (giaBanString.equals("")) {
 			request.getRequestDispatcher("/edit2.jsp?err=4").forward(request, response);
 			return;
@@ -104,8 +109,8 @@ public class EditProductController2 extends HttpServlet {
 			request.getRequestDispatcher("/edit2.jsp?err=5&giaBan=0").forward(request, response);
 			return;
 		}
-		Product objPro = new Product(id, tenHoa, moTa, fileName, giaBan);
-		if (ProductDAO.Edititems(objPro) > 0) {
+		Product objPro1 = new Product(id, tenHoa, moTa, fileName, giaBan);
+		if (ProductDAO.Edititems(objPro1) > 0) {
 			response.sendRedirect(request.getContextPath() + "/IndexProduct?msg=2");
 			return;
 		} else {

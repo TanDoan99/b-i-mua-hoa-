@@ -19,7 +19,6 @@
 				String err = "";
 				if(request.getParameter("tenHoa")!=null) tenHoa = (String) request.getParameter("tenHoa");
 				if(request.getParameter("moTa")!=null) moTa = (String) request.getParameter("moTa");
-				if(request.getParameter("hinhAnh")!=null) hinhAnh =  (String)request.getParameter("hinhAnh");
 				if(request.getParameter("giaBan")!=null) giaBanString = (String) request.getParameter("giaBan");
 				if(request.getParameter("err")!=null) err = (String) request.getParameter("err");
 				

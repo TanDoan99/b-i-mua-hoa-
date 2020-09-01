@@ -29,7 +29,7 @@ public class AddProductController2 extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		request.getRequestDispatcher("/add2.jsp").forward(request, response);
-		
+
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -40,23 +40,14 @@ public class AddProductController2 extends HttpServlet {
 		String tenHoa = request.getParameter("tenHoa");
 		String moTa = request.getParameter("moTa");
 		String giaBanString = request.getParameter("giaBan");
-
-		if (tenHoa.equals("")) {
-			request.getRequestDispatcher("/add2.jsp?err=1").forward(request, response);
-			return;
-		}
-		if (moTa.equals("")) {
-			request.getRequestDispatcher("/add2.jsp?err=2").forward(request, response);
-			return;
-		}
 		String fileName = "";
-		
+
 		Part filePart = request.getPart("hinhAnh");
 		fileName = filePart.getSubmittedFileName();// lấy tên thư mục gốc
 		String fileType = filePart.getContentType();
-		
+
 		try {
-			if(!fileType.startsWith("image")) {
+			if (!fileType.startsWith("image")) {
 				throw new Exception();
 			}
 			String contextRoot = request.getServletContext().getRealPath("");
@@ -65,7 +56,7 @@ public class AddProductController2 extends HttpServlet {
 			if (!saveDir.exists()) {
 				saveDir.mkdir();
 			}
-			
+
 			Date date = new Date();
 			SimpleDateFormat sdf = new SimpleDateFormat("ddMMyyyyhhmmss");
 			String fname = sdf.format(date);
@@ -79,6 +70,15 @@ public class AddProductController2 extends HttpServlet {
 			return;
 		}
 		request.setAttribute("hinhAnh", fileName);
+		if (tenHoa.equals("")) {
+			request.getRequestDispatcher("/add2.jsp?err=1").forward(request, response);
+			return;
+		}
+		if (moTa.equals("")) {
+			request.getRequestDispatcher("/add2.jsp?err=2").forward(request, response);
+			return;
+		}
+
 		if (giaBanString.equals("")) {
 			request.getRequestDispatcher("/add2.jsp?err=5").forward(request, response);
 			return;
@@ -86,15 +86,14 @@ public class AddProductController2 extends HttpServlet {
 		int giaBan = 0;
 		try {
 			giaBan = Integer.parseInt(giaBanString);
-			
+
 		} catch (NumberFormatException e) {
 			request.getRequestDispatcher("/add2.jsp?err=6&giaBan=0").forward(request, response);
 			return;
 		}
 		Product objAdd = new Product(0, tenHoa, moTa, fileName, giaBan);
-
 		if (ProductDAO.additems(objAdd) > 0) {
-			response.sendRedirect(request.getContextPath()+"/IndexProduct?msg=1");
+			response.sendRedirect(request.getContextPath() + "/IndexProduct?msg=1");
 			return;
 		} else {
 			request.getRequestDispatcher("/add2.jsp?err=0").forward(request, response);
