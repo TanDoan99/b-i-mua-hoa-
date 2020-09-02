@@ -63,14 +63,14 @@ public class EditProductController2 extends HttpServlet {
 			request.getRequestDispatcher("/edit2.jsp?err=2").forward(request, response);
 			return;
 		}
-		String fileName = "", dirUpLoad = "", fileReName = "";
+		String fileName = "";
+		Part filePart = request.getPart("hinhAnh");
+		String fileType = filePart.getContentType();// kiểm tra file hình ảnh
+		fileName = filePart.getSubmittedFileName();// lấy tên thư mục gốc
 		Product objPro = ProductDAO.getItem(id);
 		if (fileName.equals("")) {
 			fileName = objPro.getHinhAnh();
 		} else {
-			Part filePart = request.getPart("hinhAnh");
-			String fileType = filePart.getContentType();// kiểm tra file hình ảnh
-			fileName = filePart.getSubmittedFileName();// lấy tên thư mục gốc
 			try {
 				if (!fileType.startsWith("image")) {
 					throw new Exception();
@@ -81,11 +81,11 @@ public class EditProductController2 extends HttpServlet {
 				if (!saveDir.exists()) {
 					saveDir.mkdir();
 				}
-				String firstName = fileName.split("\\.")[0];
-				String lastName = fileName.split("\\.")[1];
 				Date date = new Date();
 				SimpleDateFormat sdf = new SimpleDateFormat("ddMMyyyyhhmmss");
 				String fname = sdf.format(date);
+				String firstName = fileName.split("\\.")[0];
+				String lastName = fileName.split("\\.")[1];
 				fileName = firstName + "_" + fname + "." + lastName;
 				String filePath = dirUpload + File.separator + fileName;
 				filePart.write(filePath);

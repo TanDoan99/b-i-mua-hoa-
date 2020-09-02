@@ -41,11 +41,9 @@ public class AddProductController2 extends HttpServlet {
 		String moTa = request.getParameter("moTa");
 		String giaBanString = request.getParameter("giaBan");
 		String fileName = "";
-
 		Part filePart = request.getPart("hinhAnh");
 		fileName = filePart.getSubmittedFileName();// lấy tên thư mục gốc
-		String fileType = filePart.getContentType();
-
+		String fileType  = filePart.getContentType();
 		try {
 			if (!fileType.startsWith("image")) {
 				throw new Exception();

@@ -57,7 +57,7 @@
 					</p>
 
 					<p>
-						<img alt=""src="<%=request.getContextPath()%>/images/tmp/${hinhAnh}<%out.print(hinhAnh);%>"/>
+						<img alt=""src="<%=request.getContextPath()%>/images/tmp/${hinhAnh}<%if(hinhAnh!=null)out.print(hinhAnh);%>"/>
 						<label>Hình ảnh</label> <input type="file"
 							name="hinhAnh"value="" />
 					</p>
